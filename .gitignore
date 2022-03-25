@@ -1,0 +1,6 @@
+/venv
+/logs
+# .env
+/data
+.git
+/.idea
