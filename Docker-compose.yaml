@@ -45,7 +45,7 @@ services:
     environment:
       - DEBUG=${DEBUG}
       - SECRET_KEY=${SECRET_KEY}
-      - DJANGO_ALLOWED_HOSTS=${DJANGO_A}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       - CELERY_BROKER=${CELERY_BROKER}
       - CELERY_BACKEND=${CELERY_BROKER}
     depends_on:
