@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     # libs
 
     # apps
-    'mailer',
+    'main',  # register/login user, main_page
+    'mailer',  # upload subscribers, templates and posts it
 ]
 
 MIDDLEWARE = [
