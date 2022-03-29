@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+        {% for subscriber in page_obj %}
+        <li>
+            <ul>
+                <li>email_address: {{subscriber.email_address  }}</li>
+                <li>name : {{ subscriber.name }}</li>
+                <li>second_name: {{ subscriber.second_name }}</li>
+                <li>birthday: {{ subscriber.birthday }}</li>
+                <li>user: {{ subscriber.user }}</li>
+                <li>group: {% for gp in subscriber.group.all %}{{ gp.name }};{% endfor %}</li>
+                <li>active: {{subscriber.active  }}</li>
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    {% block content %}
+    <h1>Регистрация</h1>
+    <form method="post" class="form-group" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="non-field-errors">
+            {% for err in form.non_field_errors %}
+            <p class="form-error">{{ err }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for input in form %}
+        <p>
+            <label class="form-label" for="{{ input.id_for_label }}">
+                {{input.label}}:
+            </label>
+            {{input}}
+        </p>
+        <div class="form-error">{{ input.errors }}</div>
+        {% endfor %}
+        <button type="submit">Добавить сабскрубера</button>
+    </form>
+    {% endblock %}
+</body>
+</html>

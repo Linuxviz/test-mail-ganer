@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img src="http://localhost:8000/mailer/general_pixel/{{msg_id}}/" width="1px" height="1px" border="0"/>
+<p>{{content}}</p>
+{% if content %}
+{{ content }}
+{% endif %}
+</body>
+</html>

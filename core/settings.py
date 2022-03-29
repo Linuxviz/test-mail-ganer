@@ -28,6 +28,8 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
+PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+
 INSTALLED_APPS = [
     # std
     'django.contrib.admin',
@@ -59,7 +61,9 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(PROJECT_DIR, '../'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,6 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
+
 LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
@@ -121,9 +126,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static') + '/'
 
 # Celery
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
+
+ALLOWED_FILE_EXTANTIONS_FOR_SUBSCRIBERS_UPLOAD = ('application/json',)
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

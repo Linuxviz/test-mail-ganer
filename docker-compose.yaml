@@ -40,7 +40,7 @@ services:
     env_file:
       - .env
     build: .
-    command: celery worker --app=core --loglevel=info --logfile=logs/celery.log
+    command: celery worker --app=core --loglevel=info #--logfile=logs/celery.log
     volumes:
       - .:/code
     environment:
