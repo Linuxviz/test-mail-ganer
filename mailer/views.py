@@ -69,7 +69,6 @@ def add_subscriber(request):
 @login_required
 def add_subscribers(request):
     """Add many subscribers from file view"""
-    # сделать класс ридер который возращает json и класс который создает объекты
     form = SubscribersForm()
     context = {'form': form}
     if request.method == 'POST':
@@ -198,7 +197,6 @@ def is_allowed_extantion(extantion):
 def get_extantion(file_obj):
     try:
         extantion = magic.Magic(mime=True).from_buffer(file_obj.read())
-    # TODO log
     except:
         extantion = None
     return extantion
