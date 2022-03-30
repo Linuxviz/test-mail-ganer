@@ -1,26 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-    {% block content %}
-    <h1>Регистрация</h1>
-    <form method="post" class="form-group" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for input in form %}
-        <p>
-            <label class="form-label" for="{{ input.id_for_label }}">
-                {{input.label}}:
-            </label>
-            {{input}}
-        </p>
-        <div class="form-error">{{ input.errors }}</div>
-        {% endfor %}
-        <button type="submit">Добавить темплеты</button>
-    </form>
-    {% endblock %}
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<h1>Добавить шаблон письма</h1>
+<p>
+    Вы можете использовать следующие тэги "{⁢{name}⁢}","{⁢{second_name}⁢}","{⁢{birthday}⁢}",(меду скобками не нужен пробел) для вставки переменных пользователя,
+    если этих данных не содержится в базе будет подставлена пустая строка, файл не будет сохранен если обнаружится "{%"
+    или "%}"
+</p>
+<form method="post" class="form-group" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for input in form %}
+    <p>
+        <label class="form-label" for="{{ input.id_for_label }}">
+            {{input.label}}:
+        </label>
+        {{input}}
+    </p>
+    <div class="form-error">{{ input.errors }}</div>
+    {% endfor %}
+    <button type="submit">Добавить шаблон</button>
+</form>
+{% endblock %}

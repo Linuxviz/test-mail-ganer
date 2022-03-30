@@ -5,13 +5,28 @@
     <title>Title</title>
 </head>
 <body>
-    {% block top_menu %}
-    {% endblock %}
-
-    {% block sidebar %}
-    {% endblock %}
-
+    <ul>
+        <li>
+            <a href="{% url 'main_page' %}">Главная</a>
+        </li>
+        <li>
+            <a href="{% url 'add_subscriber' %}">Добавить подписчика</a>
+        </li>
+        <li>
+            <a href="{% url 'add_subscribers' %}">Добавить подписчик<b>ов</b></a>
+        </li>
+        <li>
+            <a href="{% url 'subscriber_list' %}">Список подписчиков</a>
+        </li>
+        <li>
+            <a href="{% url 'add_template' %}">Добавить шаблон</a>
+        </li>
+        <li>
+            <a href="{% url 'push_mails' %}">Отправить письма</a>
+        </li>
+    </ul>
     {% block content %}
     {% endblock %}
+
 </body>
 </html>

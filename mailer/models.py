@@ -26,7 +26,7 @@ class Subscriber(models.Model):
     def __unicode__(self):
         return '%s - %s %s' % (self.email_address, self.name, self.second_name)
 
-# add static root
+
 def user_directory_path_for_SubscribersCollection(instance, filename):
     return 'static/user_{0}/{1}'.format(instance.group.user.pk, filename)
 
@@ -41,13 +41,17 @@ class SubscribersCollection(models.Model):
     group_name = models.CharField(max_length=100)
     upload_file = models.FileField(upload_to=user_directory_path_for_SubscribersCollection)
 
-    # TODO unicode
+    def __unicode__(self):
+        return self.group_name
 
 
 class EmailTemplate(models.Model):
     name = models.CharField(max_length=100)
     body = models.FileField(upload_to=user_directory_path_for_EmailTemplate)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def __unicode__(self):
+        return self.name + ': ' + self.body.name
 
 
 class PushAction(models.Model):
@@ -59,11 +63,18 @@ class PushAction(models.Model):
 
 
 class PushedMessage(models.Model):
+    STATUS = (
+        ('ready', u'Не отправлялось'),
+        ('success', u'Успешно отправлено'),
+        ('error', u'Ошибка'),
+    )
+
     push_action = models.ForeignKey(PushAction, on_delete=models.SET_NULL, null=True)
     subscriber = models.ForeignKey(Subscriber, on_delete=models.SET_NULL, null=True)
     view_count = models.SmallIntegerField(default=0)
     first_view_data = models.DateTimeField(null=True, blank=True)
     identificator = models.UUIDField(null=True, blank=True)
+    status = models.CharField(max_length=100, choices=STATUS, default='ready')
 
     def save(self, *args, **kwargs):
         if not self.identificator:

@@ -1,25 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
     {% block content %}
-    <h1>Регистрация</h1>
-    <form method="post" class="form-group">
-        {% csrf_token %}
-        {% for input in form %}
-        <p>
-            <label class="form-label" for="{{ input.id_for_label }}">
-                {{input.label}}:
-            </label>
-            {{input}}
-        </p>
-        <div class="form-error">{{ input.errors }}</div>
-        {% endfor %}
-        <button type="submit">Добавить сабскрубера</button>
-    </form>
+        <h1>Добавить одного подписчика</h1>
+        <form method="post" class="form-group">
+            {% csrf_token %}
+            {% for input in form %}
+            <p>
+                <label class="form-label" for="{{ input.id_for_label }}">
+                    {{input.label}}:
+                </label>
+                {{input}}
+            </p>
+            <div class="form-error">{{ input.errors }}</div>
+            {% endfor %}
+            <button type="submit">Добавить подписчика</button>
+        </form>
     {% endblock %}
-</body>
-</html>

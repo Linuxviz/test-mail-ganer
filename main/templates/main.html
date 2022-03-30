@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1> Title </h1>
+{% extends "base.html" %}
+{% block content %}
+    <h1> Главная </h1>
     {% if request.user.is_authenticated %}
-        <p>{{ user.username }}</p> | <a href="{% url 'logout_user' %}">Выйти</a>
+        <p> {{ user.username }} </p> | <a href="{% url 'logout_user' %}"> Выйти </a>
     {% else %}
         <a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Авторизация</a>
     {% endif %}
-</body>
-</html>
+{% endblock %}

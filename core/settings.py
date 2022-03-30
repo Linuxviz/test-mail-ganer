@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import logging
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,7 +28,7 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
-PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+CORE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 INSTALLED_APPS = [
     # std
@@ -62,7 +62,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, '../'),
+            os.path.join(CORE_DIR, '../'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -113,6 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
+path = os.path.join(CORE_DIR, '../', 'logs/')
+logging.basicConfig(filename=os.path.join(path, 'main.log'), level=logging.DEBUG)
 
 LANGUAGE_CODE = 'ru-ru'
 
@@ -127,7 +129,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static') + '/'
+STATIC_ROOT = os.path.join(CORE_DIR, 'static') + '/'
 
 # Celery
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')

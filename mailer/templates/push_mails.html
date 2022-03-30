@@ -1,6 +1,6 @@
 {% extends "base.html" %}
     {% block content %}
-    <h1>Добавить несколько подписчиков</h1>
+    <h1>Отправка писем группе пользователей</h1>
     <form method="post" class="form-group" enctype="multipart/form-data">
         {% csrf_token %}
         {% if form.non_field_errors %}
@@ -20,6 +20,6 @@
         </p>
         <div class="form-error">{{ input.errors }}</div>
         {% endfor %}
-        <button type="submit">Добавить подписчиков</button>
+        <button type="submit">Отправить письмо</button>
     </form>
     {% endblock %}

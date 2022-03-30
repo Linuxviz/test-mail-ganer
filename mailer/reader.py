@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
+
 import magic
 
 from core.settings import ALLOWED_FILE_EXTANTIONS_FOR_SUBSCRIBERS_UPLOAD
 
+logger = logging.getLogger(__name__)
+
 
 class FileReader:
-    # TODO try ecxept
     """
     Read document different extantions and return python list[dict].
     Reader must have a read function for every allowed mime type
@@ -23,18 +26,17 @@ class FileReader:
     def get_extantion(file_obj):
         try:
             extantion = magic.Magic(mime=True).from_file(file_obj.path)
-        # TODO log
-        except:
+        except Exception:
+            logger.exception("Error in get_extantion function")
             extantion = None
         return extantion
 
     def read(self, file_obj):
         extantion = self.get_extantion(file_obj)
         if not extantion:
-            raise Exception("Error in reading extantions")
+            raise Exception("Error in reading extantion")
 
         if not self.is_allowed_extantion(extantion):
-            # TODO Сделать exaptions
             raise Exception("This is not a allowed extantion")
 
         if extantion == 'application/json':
@@ -42,7 +44,7 @@ class FileReader:
 
         # if extantion == 'mime-type':
         # return self.current_reader(file_obj)
-        raise Exception("The mem-type is allowed but havent an any reder")
+        raise Exception("The mem-type is allowed but have not an any reader")
 
     @staticmethod
     def read_json(file_obj):

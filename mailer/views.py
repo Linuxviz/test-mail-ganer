@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 import os.path
 
 import magic
@@ -18,6 +19,7 @@ from .models import Subscriber, SubscribersCollection, SubscribersGroup, PushAct
 from .reader import FileReader
 from .tasks import push_mails_task
 
+logger = logging.getLogger(__name__)
 reader = FileReader()
 
 
@@ -35,8 +37,6 @@ class SubscriberListView(LoginRequiredMixin, ListView):
 @login_required
 def add_subscriber(request):
     """Add single subscriber view"""
-    # TODO сделать проверку уникальности подписчика
-    # + логгирование ошибки
     form = SubscriberForm()
     context = {'form': form}
     if request.method == 'POST':
@@ -80,7 +80,6 @@ def add_subscribers(request):
                 form.add_error(None, 'Ошибка добавления не распозналось раширение')
             if not is_allowed_extantion(extantion):
                 form.add_error(None, 'Неверное расширение')
-            # try:
             group = SubscribersGroup.objects.create(
                 name=bound_form.cleaned_data['group_name'],
                 user=request.user,
@@ -93,8 +92,6 @@ def add_subscribers(request):
             subscribers_collection.save()
             subscribers_list = reader.read(subscribers_collection.upload_file)
             obj_subscribers_list = []
-            obj_subgroupthrough_list = []
-            SubGroupThrough = Subscriber.group.through
             for item in subscribers_list:
                 obj = Subscriber(
                     email_address=item['email_address'],
@@ -105,47 +102,47 @@ def add_subscribers(request):
                 )
                 obj_subscribers_list.append(obj)
             subs = Subscriber.objects.bulk_create(obj_subscribers_list)
-            # тут можнос ильно оптимизировать используя bulk_create но я не успел
+            # TODO В этом месте можно сильно оптимизировать код используя
+            #  bukl_create для промежуточной таблицы
             for sub in subs:
                 sub.group.add(group.pk)
             return redirect('main_page')
-            # except Exception as e:
-            #     form.add_error(None, 'Ошибка добавления')
         context = {'form': bound_form}
     return render(request, 'add_subscribers.html', context=context)
 
 
 @login_required
 def push_mails(request):
-    """Post mails with one template all of groups members view"""
+    """ Post mails with one template all of groups members view """
     form = PushActionForm(user=request.user)
     context = {'form': form}
     if request.method == 'POST':
         bound_form = PushActionForm(data=request.POST, user=request.user)
         if bound_form.is_valid():
-            # try:
-            template = bound_form.cleaned_data['template']
-            subject = bound_form.cleaned_data['subject']
-            group = bound_form.cleaned_data['pushed_group']
-            delay_time = bound_form.cleaned_data['delay_time']
+            try:
+                template = bound_form.cleaned_data['template']
+                subject = bound_form.cleaned_data['subject']
+                group = bound_form.cleaned_data['pushed_group']
+                delay_time = bound_form.cleaned_data['delay_time']
 
-            push_action = PushAction.objects.create(
-                template=template,
-                subject=subject,
-                pushed_group=group,
-                delay_time=delay_time,
-            )
+                push_action = PushAction.objects.create(
+                    template=template,
+                    subject=subject,
+                    pushed_group=group,
+                    delay_time=delay_time,
+                )
 
-            if push_action.delay_time is not None:
-                push_mails_task.apply_async((push_action.pk,), eta=push_action.delay_time)
-            else:
-                push_mails_task.apply_async((push_action.pk,), countdown=5)
+                if push_action.delay_time is not None:
+                    push_mails_task.apply_async((push_action.pk,), eta=push_action.delay_time)
+                else:
+                    push_mails_task.apply_async((push_action.pk,), countdown=5)
 
-            return redirect('main_page')
-            # except Exception as e:
-            #     form.add_error(None, 'Ошибка добавления')
+                return redirect('main_page')
+            except Exception as e:
+                logger.exception('Error in push_mails')
+                form.add_error(None, 'Ошибка отправки писем')
         context = {'form': bound_form}
-    return render(request, 'add_subscribers.html', context=context)
+    return render(request, 'push_mails.html', context=context)
 
 
 @login_required
@@ -161,7 +158,6 @@ def add_template(request):
                 bound_form.add_error(None, 'Ошибка добавления не распозналось раширение')
             if extantion != 'text/html':
                 bound_form.add_error(None, 'Неверное расширение')
-            # try:
             template = EmailTemplate(
                 body=request.FILES['body'],
                 name=bound_form.cleaned_data['name'],
@@ -175,10 +171,8 @@ def add_template(request):
             template.delete()
             context = {'form': bound_form}
             return render(request, 'add_subscribers.html', context=context)
-            # except Exception as e:
-            #     form.add_error(None, 'Ошибка добавления')
         context = {'form': bound_form}
-    return render(request, 'add_subscribers.html', context=context)
+    return render(request, 'add_template.html', context=context)
 
 
 def email_identificator(request, pushed_email_identificator):
@@ -191,7 +185,6 @@ def email_identificator(request, pushed_email_identificator):
         if not message.first_view_data:
             message.first_view_data = timezone.now()
         message.save()
-        print os.getcwd()
         with open('mailer/templates/general_pixel/general_pixel.jpg', "rb") as f:
             return HttpResponse(f.read(), content_type="image/jpeg")
 

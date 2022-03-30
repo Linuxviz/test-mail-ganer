@@ -16,15 +16,17 @@ def send(template, subscriber, subject, msg_id):
             'birthday': subscriber.birthday,
         }
     )
-    text_content = strip_tags(html_content)
+    result = render_to_string('email_example.html', context={'content': html_content})
+    text_content = strip_tags(result)
     email = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
         from_email=None,
         to=[subscriber.email_address, ],
     )
-    email.attach_alternative(html_content, 'text/html')
-    email.send()
+    email.attach_alternative(result, 'text/html')
+    result = email.send()
+    return result
 
 
 def is_valid_template(template):
