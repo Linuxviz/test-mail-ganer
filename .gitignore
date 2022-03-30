@@ -1,5 +1,5 @@
 /venv
-/logs
+#/logs
 # .env
 /data
 .git
